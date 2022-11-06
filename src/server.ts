@@ -27,9 +27,9 @@ await fastify.register(jwt,{
  await fastify.register(authRoutes);
  await fastify.register(guessesRoutes);
 
- const port =  await fastify.listen({
+  await fastify.listen({
     port: 3333,
-    // host: '0.0.0.0'
+    host: '0.0.0.0'
   });
 }
 

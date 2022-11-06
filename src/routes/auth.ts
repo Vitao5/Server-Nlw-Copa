@@ -1,7 +1,7 @@
 import { prisma } from "./../lib/prisma";
 
 import { FastifyInstance } from "fastify";
-import { string, z } from "zod";
+import { z } from "zod";
 import fetch from "cross-fetch";
 import authenticate from "../plugins/authenticate";
 
@@ -33,16 +33,16 @@ export async function authRoutes(fastify: FastifyInstance) {
     );
 
     const userData = await userResponse.json();
-
+    
     const userInfoSchema = z.object({
       id: z.string(),
       email: z.string().email(),
-      name: string(),
-      picture: string().url(),
+      name:  z.string(),
+      picture:  z.string().url(),
     });
-
+    
     const userInfo = userInfoSchema.parse(userData);
-
+    
     let user = await prisma.user.findUnique({
       where: {
         googleId: userInfo.id,
@@ -57,6 +57,7 @@ export async function authRoutes(fastify: FastifyInstance) {
           avatarUrl: userInfo.picture,
         },
       });
+  
     }
 
     const token = fastify.jwt.sign(
